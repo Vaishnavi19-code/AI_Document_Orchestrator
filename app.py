@@ -14,7 +14,7 @@ N8N_WEBHOOK_URL = st.secrets["N8N_WEBHOOK_URL"]
 
 # client = genai.Client(api_key=GEMINI_API_KEY)
 
-st.title("📄 AI Resume Screening Orchestrator")
+st.title("📄 AI Resume Orchestrator")
 
 # ---------- FILE UPLOAD ---------- #
 uploaded_file = st.file_uploader("Upload Resume", type=["pdf", "txt"])
