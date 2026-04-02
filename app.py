@@ -10,7 +10,7 @@ N8N_WEBHOOK_URL = st.secrets["N8N_WEBHOOK_URL"]
 
 client = genai.Client(api_key=GEMINI_API_KEY)
 
-st.title("📄 AI Resume Screening with Shortlisting")
+st.title("📄 AI Resume Screening Orchestrator")
 
 # ---------- FILE UPLOAD ---------- #
 uploaded_file = st.file_uploader("Upload Resume", type=["pdf", "txt"])
@@ -26,7 +26,7 @@ def extract_text(file):
         return file.read().decode("utf-8")
 
 # ---------- JOB DESCRIPTION ---------- #
-job_desc = st.text_area("Paste Job Description")
+job_desc = st.text_area("Ask me a question")
 
 if uploaded_file and job_desc:
     resume_text = extract_text(uploaded_file)
@@ -34,9 +34,9 @@ if uploaded_file and job_desc:
     st.subheader("🔍 Analyzing Resume...")
 
     prompt = f"""
-    You are an AI recruiter.
+    You are an AI resume analyzer.
 
-    Analyze the resume against the job description.
+    Analyze the resume according to user question.
 
     Resume:
     {resume_text[:6000]}
