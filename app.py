@@ -2,19 +2,17 @@ import streamlit as st
 import pdfplumber
 import requests
 import json
-# from google import genai
 from groq import Groq
 import re
 
-GROQ_API_KEY=st.secrets["GROQ_API_KEY"]
+client = Groq(api_key=st.secrets["GROQ_API_KEY"])
+# from google import genai
 # Load secrets
 # GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
-
-
+GROQ_API_KEY=st.secrets["GROQ_API_KEY"]
 N8N_WEBHOOK_URL = st.secrets["N8N_WEBHOOK_URL"]
 
 # client = genai.Client(api_key=GEMINI_API_KEY)
-client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 
 st.title("📄 AI Resume Screening Orchestrator")
 
@@ -45,10 +43,10 @@ if uploaded_file and job_desc:
     Analyze the resume according to user question.
 
     Resume:
-    {resume_text[:5000]}
+    {resume_text[:3000]}
 
     Job Description:
-    {job_desc}
+    {job_desc[:1500]}
 
     Return STRICT JSON:
 
@@ -66,17 +64,14 @@ if uploaded_file and job_desc:
     - score >= 70 → Shortlisted
     - score < 70 → Not Shortlisted
     """
-
-    # response = client.models.generate_content(
-    #     model="gemini-2.0-flash",
-    #     contents=prompt
-    # )
     response = client.chat.completions.create(
-        model="llama-3.1-8b-instant",
-        messages=[
-            {"role": "user", "content": prompt}
-        ],
-        temperature=0)
+    model="llama-3.1-8b-instant",
+    messages=[
+        {"role": "user", "content": prompt}
+    ],
+    temperature=0
+    )
+
 
     try:
         output = response.choices[0].message.content
