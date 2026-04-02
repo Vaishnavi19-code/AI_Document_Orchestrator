@@ -116,9 +116,6 @@ if uploaded_file and job_desc:
         if res.status_code == 200:
             result = res.json()
     
-            st.subheader("🧠 Final Summary")
-            st.write(result.get("final_answer"))
-    
             st.subheader("📢 Status")
             st.success(result.get("status"))
     
