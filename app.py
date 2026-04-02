@@ -4,10 +4,11 @@ import requests
 import json
 # from google import genai
 from groq import Groq
+import re
 
+GROQ_API_KEY=st.secrets["GROQ_API_KEY"]
 # Load secrets
 # GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
-GROQ_API_KEY=st.secrets["GROQ_API_KEY"]
 
 
 N8N_WEBHOOK_URL = st.secrets["N8N_WEBHOOK_URL"]
@@ -71,59 +72,63 @@ if uploaded_file and job_desc:
     #     contents=prompt
     # )
     response = client.chat.completions.create(
-    model="llama-3.1-8b-instant",
-    messages=[
-        {"role": "user", "content": prompt}
-    ],
-    temperature=0)
-
-    output = response.choices[0].message.content
+        model="llama-3.1-8b-instant",
+        messages=[
+            {"role": "user", "content": prompt}
+        ],
+        temperature=0)
 
     try:
-        data = json.loads(output)
+        output = response.choices[0].message.content
+    
+        # ✅ Extract only JSON part (IMPORTANT FIX)
+        clean_output = re.search(r'\{.*\}', output, re.DOTALL).group()
+    
+        data = json.loads(clean_output)
+    
         st.success("✅ Analysis Complete")
-
         st.json(data)
-
+    
         # ---------- SHORTLIST DISPLAY ---------- #
         score = int(data.get("match_score", 0))
-
+    
         st.subheader("📊 Shortlisting Result")
-
+    
         if score >= 70:
             st.success("Shortlisted")
         else:
             st.error("Not Shortlisted")
-
-    except:
+    
+    except Exception as e:
         st.error("❌ JSON parsing failed")
-        data = {"error": output}
-
+        st.write(output)  # shows actual model output (VERY USEFUL)
+        data = {}
+    
     # ---------- EMAIL SECTION ---------- #
     st.subheader("📧 Notify Recruiter")
-
+    
     recruiter_email = st.text_input("Recruiter Email")
-
+    
     if st.button("Send Decision Email"):
-
+    
         payload = {
             "analysis": data,
             "email": recruiter_email
         }
-
+    
         res = requests.post(N8N_WEBHOOK_URL, json=payload)
-
+    
         if res.status_code == 200:
             result = res.json()
-
+    
             st.subheader("🧠 Final Summary")
             st.write(result.get("final_answer"))
-
+    
             st.subheader("✉ Email Content")
             st.write(result.get("email_body"))
-
+    
             st.subheader("📢 Status")
             st.success(result.get("status"))
-
+    
         else:
             st.error("❌ n8n connection failed")
