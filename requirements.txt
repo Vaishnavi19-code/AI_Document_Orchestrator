@@ -2,3 +2,4 @@ streamlit
 pdfplumber
 requests
 google-genai
+groq
