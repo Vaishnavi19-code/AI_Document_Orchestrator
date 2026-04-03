@@ -29,11 +29,21 @@ def extract_text(file):
     else:
         return file.read().decode("utf-8")
 
+# ---------- ✅ RESUME VALIDATION ---------- #
+def is_resume(text):
+    keywords = ["education", "experience", "skills", "projects", "internship"]
+    text_lower = text.lower()
+    return sum(1 for k in keywords if k in text_lower) >= 3
+
 # ---------- JOB DESCRIPTION ---------- #
 job_desc = st.text_input("Ask me a question")
 
 if uploaded_file and job_desc:
     resume_text = extract_text(uploaded_file)
+    #  VALIDATE BEFORE AI
+    if not is_resume(resume_text):
+        st.error("❌ Please upload a resume only")
+        st.stop()
 
     st.subheader("🔍 Analyzing Resume...")
 
