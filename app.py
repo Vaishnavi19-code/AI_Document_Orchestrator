@@ -100,7 +100,7 @@ if uploaded_file and job_desc:
     try:
         output = response.choices[0].message.content
     
-        # ✅ Extract only JSON part (IMPORTANT FIX)
+        # Extract only JSON part
         clean_output = re.search(r'\{.*\}', output, re.DOTALL).group()
     
         data = json.loads(clean_output)
