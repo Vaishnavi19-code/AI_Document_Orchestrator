@@ -106,7 +106,6 @@ if uploaded_file and job_desc:
         data = json.loads(clean_output)
     
         st.success("✅ Analysis Complete")
-        # st.json(data)
         st.subheader("📄 Candidate Summary")
 
         st.write(f"👤 Name: {data.get('candidate_name', 'N/A')}")
@@ -123,6 +122,7 @@ if uploaded_file and job_desc:
         st.write(f"📌 Decision: {data.get('shortlist_category', '')}")
         
         st.write(f"📝 Reason: {data.get('reason', '')}")
+          # st.json(data)
     
         # ---------- SHORTLIST DISPLAY ---------- #
         score = int(data.get("match_score", 0))
