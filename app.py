@@ -49,6 +49,12 @@ def is_resume(text):
 
     return False
     
+# ---------- EMAIL EXTRACTION ---------- #
+def extract_email(text):
+    pattern = r"[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+"
+    match = re.search(pattern, text)
+    return match.group(0) if match else None
+    
 # ---------- JOB DESCRIPTION ---------- #
 job_desc = st.text_input("Ask me a question")
 
@@ -162,3 +168,31 @@ if uploaded_file and job_desc:
         
             else:
                 st.error("❌ n8n connection failed")
+    else:
+        # ✅ Extract Email
+        candidate_email = extract_email(resume_text)
+    
+        if candidate_email:
+            st.success(f"📧 Candidate Email Detected: {candidate_email}")
+        else:
+            st.warning("⚠️ Email not found. Please enter manually.")
+            candidate_email = st.text_input("Candidate Email")
+            
+        payload = {
+            "analysis": data,
+            "candidate_email": candidate_email,
+        }
+
+        res = requests.post(N8N_WEBHOOK_URL, json=payload)
+        
+        if res.status_code == 200:
+            result = res.json()
+    
+            st.subheader("📢 Status")
+            st.success(result.get("status"))
+    
+        else:
+            st.error("❌ n8n connection failed")
+
+
+
