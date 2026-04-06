@@ -177,22 +177,22 @@ if uploaded_file and job_desc:
         else:
             st.warning("⚠️ Email not found. Please enter manually.")
             candidate_email = st.text_input("Candidate Email")
+        if st.button("Send feedback email"):    
+            payload = {
+                "analysis": data,
+                "candidate_email": candidate_email,
+            }
             
-        payload = {
-            "analysis": data,
-            "candidate_email": candidate_email,
-        }
-
-        res = requests.post(N8N_WEBHOOK_URL, json=payload)
+            res = requests.post(N8N_WEBHOOK_URL, json=payload)
+            
+            if res.status_code == 200:
+                result = res.json()
         
-        if res.status_code == 200:
-            result = res.json()
-    
-            st.subheader("📢 Status")
-            st.success(result.get("status"))
-    
-        else:
-            st.error("❌ n8n connection failed")
+                st.subheader("📢 Status")
+                st.success(result.get("status"))
+        
+            else:
+                st.error("❌ n8n connection failed")
 
 
 
