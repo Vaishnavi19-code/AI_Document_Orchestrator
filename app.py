@@ -162,7 +162,7 @@ if uploaded_file and job_desc:
         
             payload = {
                 "analysis": data,
-                "email": recruiter_email
+                "email": recruiter_email,
                 "candidate_email": candidate_email
             }
         
