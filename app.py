@@ -149,8 +149,6 @@ if uploaded_file and job_desc:
         try:
             res = requests.post(N8N_WEBHOOK_URL, json=payload)
     
-            st.write("RAW RESPONSE:", res.text)
-    
             if res.status_code != 200:
                 st.error(f"❌ Error: {res.status_code}")
                 st.write(res.text)
@@ -159,14 +157,8 @@ if uploaded_file and job_desc:
             try:
                 result = res.json()
     
-                st.subheader("🧠 Final Summary")
-                st.write(result.get("final_answer"))
-    
-                st.subheader("✉ Email Content")
-                st.write(result.get("email_body"))
-    
                 st.subheader("📢 Status")
-                st.success(result.get("status"))
+                st.success(result.get("Status"))
     
             except:
                 st.error("❌ Invalid JSON from n8n")
