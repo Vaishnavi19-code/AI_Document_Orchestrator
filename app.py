@@ -170,14 +170,7 @@ if uploaded_file and job_desc:
   
     # ---------- EMAIL SECTION ---------- #
     
-    st.subheader("📧 Send Notification")
-    
     candidate_email = extract_email(resume_text)
-    
-    if candidate_email:
-        st.success(f"📧 Candidate Email: {candidate_email}")
-    else:
-        candidate_email = st.text_input("Enter Candidate Email")
     
     # ✅ CASE 1: SHORTLISTED
     if score >= 70:
@@ -198,6 +191,10 @@ if uploaded_file and job_desc:
     
     # ❌ CASE 2: NOT SHORTLISTED
     else:
+        if candidate_email:
+            st.success(f"📧 Candidate Email: {candidate_email}")
+        else:
+            candidate_email = st.text_input("Enter Candidate Email")
     
         if st.button("Send Feedback Email"):
     
