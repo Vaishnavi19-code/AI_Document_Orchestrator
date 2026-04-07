@@ -144,6 +144,13 @@ if uploaded_file and job_desc:
         st.error("❌ JSON parsing failed")
         st.write(output)  # shows actual model output (VERY USEFUL)
         data = {}
+     # ✅ Extract Email
+    candidate_email = extract_email(resume_text)
+    if candidate_email:
+            st.success(f"📧 Candidate Email Detected: {candidate_email}")
+    else:
+        st.warning("⚠️ Email not found. Please enter manually.")
+        candidate_email = st.text_input("Candidate Email")
 
     if score>=70:
         # ---------- EMAIL SECTION ---------- #
@@ -156,6 +163,7 @@ if uploaded_file and job_desc:
             payload = {
                 "analysis": data,
                 "email": recruiter_email
+                "candidate_email": candidate_email
             }
         
             res = requests.post(N8N_WEBHOOK_URL, json=payload)
@@ -169,14 +177,6 @@ if uploaded_file and job_desc:
             else:
                 st.error("❌ n8n connection failed")
     else:
-        # ✅ Extract Email
-        candidate_email = extract_email(resume_text)
-    
-        if candidate_email:
-            st.success(f"📧 Candidate Email Detected: {candidate_email}")
-        else:
-            st.warning("⚠️ Email not found. Please enter manually.")
-            candidate_email = st.text_input("Candidate Email")
         if st.button("Send feedback email"):    
             payload = {
                 "analysis": data,
