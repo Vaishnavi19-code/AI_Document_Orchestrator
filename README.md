@@ -1,4 +1,4 @@
-AI Resume Orchestrator
+# AI Resume Orchestrator
 An AI-powered system that automates resume screening, candidate evaluation, and communication using Streamlit, Groq API, and n8n workflows.
 
 Overview
